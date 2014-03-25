@@ -174,22 +174,13 @@ function! s:pathsplit(path) abort
   return split(s:gsub(a:path, '\\ ', ' '), ',')
 endfunction
 
-" Convert a list to a path.  From pathogen.vim
+" Convert a list to a path.
 function! s:pathjoin(...) abort
   let i = 0
   let path = ""
   while i < a:0
     if type(a:000[i]) == type([])
-      let list = a:000[i]
-      let j = 0
-      while j < len(list)
-        let escaped = substitute(list[j],'[\\, ]','\\&','g')
-        if exists("+shellslash") && !&shellslash
-          let escaped = substitute(escaped,'^\(\w:\\\)\\','\1','')
-        endif
-        let path .= ',' . escaped
-        let j += 1
-      endwhile
+      let path .= "," . escape(join(a:000[i], ','), ' ')
     else
       let path .= "," . a:000[i]
     endif
