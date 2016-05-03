@@ -3236,6 +3236,15 @@ function! s:Alternate(cmd,line1,line2,count,...) abort
         endif
       endif
     endif
+
+    if !confirm && !a:count && !has_path
+      let projected = rails#buffer().projected_with_raw('alternate')
+      call filter(projected, 'rails#app().has_path(matchstr(v:val[1], "^[^{}]*/"))')
+      if len(projected)
+	let file = projected[0][0] . '!'
+      endif
+    endif
+
     if empty(file)
       call s:error("No alternate file defined")
       return ''
